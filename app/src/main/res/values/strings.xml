@@ -1,0 +1,71 @@
+<resources>
+    <string name="app_name">Vocabulary Application (V1)</string>
+    <string name="reminder_notification_channel_id">vocabulary_application_channel</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Navigation Text -->
+    <string name="menu_home">All Lists</string>
+    <string name="menu_about">About</string>
+    <string name="menu_slideshow">Slideshow</string>
+
+    <!-- Multi-purpose -->
+    <string name="save_settings">Save Settings</string>
+
+    <!-- Vocabulary List summary card -->
+    <string name="vocabulary_overview_list_card_level">%1$s</string>
+
+    <!-- Vocabulary Lists Filter Bottom Sheet Text -->
+    <string name="filter_lists_bottom_sheet_title">Filter Lists</string>
+    <string name="filter_lists_bottom_sheet_instructions">Use the filter options below to find lists that match your learning needs. Your preferences will be saved automatically.</string>
+    <string name="practice_words">Practice</string>
+    <string name="no_vocabulary_lists_can_be_found_for_your_search">No vocabulary lists can be found for your search.</string>
+    <string name="problem_loading_list">Oops! It seems there was a problem loading this list!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="fragment_vocabulary_list_details_label">List Details</string>
+    <string name="fragment_vocabulary_list_details_practice_next_on">Review on or after %1$s to increase level</string>
+    <string name="fragment_vocabulary_list_details_time_to_review">Time to review this word to level up!</string>
+    <string name="fragment_vocabulary_list_details_you_have_learned_this_word">You have learned this word!</string>
+    <string name="fragment_vocabulary_list_practice_label">Practice Vocabulary</string>
+    <string name="fragment_vocabulary_list_delete_reminder">Delete</string>
+    <string name="fragment_vocabulary_list_details_set_reminder_for">Set Study Reminder for %1$s</string>
+    <string name="fragment_vocabulary_list_details_reminder_deleted">Reminder deleted</string>
+    <string name="fragment_vocabulary_list_add_reminder">Set</string>
+    <string name="fragment_vocabulary_list_add_reminder_with_date">Set Study Reminder (%1$s)</string>
+    <string name="fragment_vocabulary_list_motivational_text">Keep practicing</string>
+    <string name="fragment_vocabulary_list_well_done">Well done! You\'ve completed this list.</string>
+    <string name="fragment_vocabulary_list_motivational_text_with_date">Review on %1$s</string>
+
+<!--    <string name="review_in_one_week">Review this word in over one week</string>-->
+<!--    <string name="review_in_weeks">Review this word in %1$s weeks</string>-->
+<!--    <string name="review_tomorrow">Review this word in over one day</string>-->
+<!--    <string name="review_in_days">Review this word in %1$s days</string>-->
+<!--    <string name="review_in_one_hour">Review this word in over an hour</string>-->
+<!--    <string name="review_in_hours">Review this word in %1$s hours</string>-->
+
+    <string name="fragment_multiple_choice_instructions">What is the correct translation of \'%1$s\'?</string>
+    <string name="feedback_incorrect">Incorrect</string>
+    <string name="feedback_correct_answer_was">The correct answer was:</string>
+    <string name="feedback_correct">Correct!</string>
+    <string name="exercise_check">Check</string>
+    <string name="exercise_next">Next</string>
+
+    <string name="strength_level_one">Level One</string>
+    <string name="strength_level_two">Level Two</string>
+    <string name="strength_level_three">Level Three</string>
+    <string name="strength_level_four">Level Four</string>
+    <string name="strength_level_five">Level Five</string>
+
+    <string name="notification_title_study_reminder">Study Reminder</string>
+    <string name="notification_description_study_reminder">Time to review a vocabulary list!</string>
+
+    <string name="about_title">Want to learn German?</string>
+    <string name="about_text">This app intends to help you learn the language using the pedagogical best practice of spaced repetition - that means practicing words at increasing time intervals. Using this app, you can practice various lists with short exercises.\n\nAfter practicing the words enough, you can level up your words (up to Level 5) and set a reminder to review them at a later date. Doing so at the suggested intervals will help you remember the words in the long-term.</string>
+    <string name="about_image">https://cdn.pixabay.com/photo/2015/12/05/19/49/bridge-1078671__340.jpg</string>
+</resources>

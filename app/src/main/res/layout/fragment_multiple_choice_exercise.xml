@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="android.view.View"/>
+        <import type="com.swjcook.vocabularyapplication.ui.vocabularypractice.VocabularyPracticeViewModel"/>"
+        <variable
+            name="viewModel"
+            type="com.swjcook.vocabularyapplication.ui.vocabularypractice.VocabularyPracticeViewModel" />
+        <variable
+            name="multipleChoiceExercise"
+            type="com.swjcook.vocabularyapplication.ui.vocabularypractice.exercises.MultipleChoiceExercise" />
+    </data>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{!viewModel.feedbackStatus.equals(VocabularyPracticeViewModel.ShowFeedbackStatus.PRACTICE_COMPLETE) ? View.VISIBLE : View.GONE}">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="@dimen/margin_default"
+                android:layout_marginEnd="@dimen/margin_default"
+                android:layout_marginTop="@dimen/margin_default"
+                android:layout_marginBottom="@dimen/margin_default"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                tools:context=".ui.vocabularypractice.exercises.MultipleChoiceExerciseFragment">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/instructions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+                        android:text="@{@string/fragment_multiple_choice_instructions(multipleChoiceExercise.hardMode == false ? multipleChoiceExercise.correctAnswer.word.word : multipleChoiceExercise.correctAnswer.word.translation)}"
+                        android:layout_marginTop="@dimen/margin_default"
+                        android:layout_marginStart="@dimen/margin_default"
+                        android:layout_marginEnd="@dimen/margin_default"
+                        tools:text="What is the correct translation of 'ein Ordner'?" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_default"
+                        android:layout_marginStart="@dimen/margin_default"
+                        android:layout_marginEnd="@dimen/margin_default"
+                        android:elevation="0dp"
+                        app:cardCornerRadius="@dimen/card_corner_radius"
+                        app:cardBackgroundColor="@android:color/holo_green_light"
+                        android:visibility="@{viewModel.feedbackStatus.equals(VocabularyPracticeViewModel.ShowFeedbackStatus.SHOW_CORRECT_FEEDBACK) ? View.VISIBLE : View.GONE)}">
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_default">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                                android:textStyle="bold"
+                                android:textColor="@color/white"
+                                android:text="@string/feedback_correct"/>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_default"
+                        android:layout_marginStart="@dimen/margin_default"
+                        android:layout_marginEnd="@dimen/margin_default"
+                        android:elevation="0dp"
+                        app:cardCornerRadius="@dimen/card_corner_radius"
+                        app:cardBackgroundColor="@android:color/holo_red_light"
+                        android:visibility="@{viewModel.feedbackStatus.equals(VocabularyPracticeViewModel.ShowFeedbackStatus.SHOW_INCORRECT_FEEDBACK) ? View.VISIBLE : View.GONE)}">
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_default">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/margin_tiny"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                                android:textStyle="bold"
+                                android:textColor="@color/white"
+                                android:text="@string/feedback_incorrect"/>
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/margin_tiny"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                                android:textColor="@color/white"
+                                android:text="@string/feedback_correct_answer_was"/>
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                                android:textStyle="bold"
+                                android:textColor="@color/white"
+                                android:text="@{multipleChoiceExercise.correctAnswer.word.translation}"
+                                tools:text="a folder"/>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <RadioGroup
+                        android:id="@+id/radioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_default"
+                        android:layout_marginStart="@dimen/margin_default"
+                        android:layout_marginEnd="@dimen/margin_default">
+                        <RadioButton
+                            android:id="@+id/radio_button_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                            android:text="@{multipleChoiceExercise.hardMode == false ? multipleChoiceExercise.answerOne.word.translation : multipleChoiceExercise.answerOne.word.word}"
+                            tools:text="a file"
+                            android:clickable="@{viewModel.feedbackStatus.equals(VocabularyPracticeViewModel.ShowFeedbackStatus.NO_FEEDBACK)}"
+                            android:onClick="@{() -> multipleChoiceExercise.setSelectedAnswer(multipleChoiceExercise.answerOne)}"/>
+                        <RadioButton
+                            android:id="@+id/radio_button_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                            android:text="@{multipleChoiceExercise.hardMode == false ? multipleChoiceExercise.answerTwo.word.translation : multipleChoiceExercise.answerTwo.word.word}"
+                            tools:text="a folder"
+                            android:clickable="@{viewModel.feedbackStatus.equals(VocabularyPracticeViewModel.ShowFeedbackStatus.NO_FEEDBACK)}"
+                            android:onClick="@{() -> multipleChoiceExercise.setSelectedAnswer(multipleChoiceExercise.answerTwo)}"/>
+                    </RadioGroup>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_default"
+                        android:layout_marginStart="@dimen/margin_default"
+                        android:layout_marginEnd="@dimen/margin_default"
+                        android:layout_marginBottom="@dimen/margin_default"
+                        android:text="@string/exercise_check"
+                        tools:text="Check"
+                        android:visibility="@{viewModel.feedbackStatus.equals(VocabularyPracticeViewModel.ShowFeedbackStatus.NO_FEEDBACK) ? View.VISIBLE : View.GONE}"
+                        android:onClick="@{() -> viewModel.checkAnswer(multipleChoiceExercise)}"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_default"
+                        android:layout_marginStart="@dimen/margin_default"
+                        android:layout_marginEnd="@dimen/margin_default"
+                        android:layout_marginBottom="@dimen/margin_default"
+                        android:text="@string/exercise_next"
+                        tools:text="Next"
+                        android:visibility="@{viewModel.feedbackStatus.equals(VocabularyPracticeViewModel.ShowFeedbackStatus.SHOW_CORRECT_FEEDBACK) || viewModel.feedbackStatus.equals(VocabularyPracticeViewModel.ShowFeedbackStatus.SHOW_INCORRECT_FEEDBACK) ? View.VISIBLE : View.GONE}"
+                        android:onClick="@{() -> viewModel.nextExercise(multipleChoiceExercise)}"/>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

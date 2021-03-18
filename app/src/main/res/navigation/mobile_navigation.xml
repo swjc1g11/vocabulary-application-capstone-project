@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.swjcook.vocabularyapplication.ui.vocabularylistsoverview.VocabularyListsOverviewFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_vocabulary_lists_overview" >
+        <action
+            android:id="@+id/action_nav_home_to_vocabularyListDetailFragment"
+            app:destination="@id/vocabularyListDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_about"
+        android:name="com.swjcook.vocabularyapplication.ui.about.AboutFragment"
+        android:label="@string/menu_about"
+        tools:layout="@layout/fragment_about" />
+
+    <fragment
+        android:id="@+id/vocabularyListDetailFragment"
+        android:name="com.swjcook.vocabularyapplication.ui.vocabularylistdetail.VocabularyListDetailFragment"
+        android:label="@string/fragment_vocabulary_list_details_label"
+        tools:layout="@layout/vocabulary_list_detail_fragment">
+        <argument
+            android:name="listUUID"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_vocabularyListDetailFragment_to_vocabularyPracticeFragment"
+            app:destination="@id/vocabularyPracticeFragment"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/vocabularyPracticeFragment"
+        android:name="com.swjcook.vocabularyapplication.ui.vocabularypractice.VocabularyPracticeFragment"
+        android:label="@string/fragment_vocabulary_list_practice_label">
+        <argument
+            android:name="listUUID"
+            app:argType="string" />
+    </fragment>
+</navigation>

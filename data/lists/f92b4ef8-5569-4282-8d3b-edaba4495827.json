@@ -1,0 +1,34 @@
+[
+  {
+    "_id": "34ead67a-9798-4ac1-bdd2-194b21cec3e4",
+    "listId": "f92b4ef8-5569-4282-8d3b-edaba4495827",
+    "languageTaught": "de-DE",
+    "translationLanguage": "en-UK",
+    "word": "eine Datei",
+    "translation": "a file"
+  },
+  {
+    "_id": "0ab9fdeb-88d1-48e9-ac31-6e04cff7cf87",
+    "listId": "f92b4ef8-5569-4282-8d3b-edaba4495827",
+    "languageTaught": "de-DE",
+    "translationLanguage": "en-UK",
+    "word": "ein Ordner",
+    "translation": "a folder"
+  },
+  {
+    "_id": "1947a703-9869-42c2-9fb8-5ae359b4e41d",
+    "listId": "f92b4ef8-5569-4282-8d3b-edaba4495827",
+    "languageTaught": "de-DE",
+    "translationLanguage": "en-UK",
+    "word": "eine Tastatur",
+    "translation": "a keyboard"
+  },
+  {
+    "_id": "b9ef8611-734f-44d6-87ee-7bd263ccaebf",
+    "listId": "f92b4ef8-5569-4282-8d3b-edaba4495827",
+    "languageTaught": "de-DE",
+    "translationLanguage": "en-UK",
+    "word": "eine Maus",
+    "translation": "a mouse"
+  }
+]

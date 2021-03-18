@@ -1,0 +1,18 @@
+[
+  {
+    "_id": "9c3b3dcb-ec25-4cc4-83f2-0f534fca5d4c",
+    "listId": "1d92faf9-2b3e-4731-b231-83f5c65bb645",
+    "languageTaught": "de-DE",
+    "translationLanguage": "en-UK",
+    "word": "ein Haarschnitt",
+    "translation": "a haircut"
+  },
+  {
+    "_id": "a9653c89-df0e-4055-9ac5-c6a2b85623db",
+    "listId": "1d92faf9-2b3e-4731-b231-83f5c65bb645",
+    "languageTaught": "de-DE",
+    "translationLanguage": "en-UK",
+    "word": "ein Seitenpony",
+    "translation": "a side fringe"
+  }
+]

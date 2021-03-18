@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.swjcook.vocabularyapplication.ui.about.AboutViewModel" />
+    </data>
+    <ScrollView android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:context=".ui.about.AboutFragment">
+        <androidx.constraintlayout.motion.widget.MotionLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layoutDescription="@xml/about_motion_scene">
+
+            <ImageView
+                android:id="@+id/titleImage"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/placeholder"
+                networkImage="@{viewModel.imageUrl}" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/aboutTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/about_title"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/aboutText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/about_text"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"/>
+
+        </androidx.constraintlayout.motion.widget.MotionLayout>
+    </ScrollView>
+</layout>
