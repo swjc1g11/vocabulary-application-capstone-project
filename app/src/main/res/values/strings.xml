@@ -51,7 +51,7 @@
 
     <string name="fragment_multiple_choice_instructions">What is the correct translation of \'%1$s\'?</string>
     <string name="feedback_incorrect">Incorrect</string>
-    <string name="feedback_correct_answer_was">The correct answer was:</string>
+    <string name="feedback_correct_answer_was">The correct answer was:\n\n<b>%1$s</b></string>
     <string name="feedback_correct">Correct!</string>
     <string name="exercise_check">Check</string>
     <string name="exercise_next">Next</string>
