@@ -10,7 +10,11 @@ import java.util.*
 data class VocabularyListStateDTO(
     @PrimaryKey() val _id: String = UUID.randomUUID().toString(),
     val listId : String = "",
-    val status: VocabularyListStatus = VocabularyListStatus.NOT_STARTED,
+    val userId: String = "",
+    var practiceInterval : UserWordStateLevel = UserWordStateLevel.LEVEL_ONE,
+    var lastChangeInInterval: Date = Date(System.currentTimeMillis()),
+    var nextChangeInIntervalPossibleOn: Date? = null,
+    var listAcquired : Boolean = false,
     var createdAt: Date = Date(System.currentTimeMillis()),
     var updatedAt: Date = Date(System.currentTimeMillis())
 )
@@ -19,7 +23,10 @@ fun VocabularyListStateDTO.asDomainModel(): VocabularyListState {
     return VocabularyListState(
         _id = _id,
         listId = listId,
-        status = status,
+        practiceInterval = practiceInterval,
+        lastChangeInInterval = lastChangeInInterval,
+        nextChangeInIntervalPossibleOn = nextChangeInIntervalPossibleOn,
+        listAcquired = false,
         createdAt = createdAt,
         updatedAt = updatedAt
     )

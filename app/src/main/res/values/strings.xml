@@ -25,8 +25,9 @@
     <string name="practice_words">Practice</string>
     <string name="no_vocabulary_lists_can_be_found_for_your_search">No vocabulary lists can be found for your search.</string>
     <string name="problem_loading_list">Oops! It seems there was a problem loading this list!</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="fragment_vocabulary_lists_overview_not_started">Not Started</string>
 
     <string name="fragment_vocabulary_list_details_label">List Details</string>
     <string name="fragment_vocabulary_list_details_practice_next_on">Review on or after %1$s to increase level</string>

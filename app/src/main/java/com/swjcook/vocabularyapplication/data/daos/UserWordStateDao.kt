@@ -3,6 +3,7 @@ package com.swjcook.vocabularyapplication.data.daos
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.swjcook.vocabularyapplication.data.entities.UserWordStateDTO
+import java.util.*
 
 @Dao
 interface UserWordStateDao {
@@ -16,12 +17,6 @@ interface UserWordStateDao {
     @Query("SELECT * FROM user_word_state WHERE listId = :listId AND userId = :userId")
     fun getStateByListAndUserId(listId: String, userId: String): LiveData<List<UserWordStateDTO>>
 
-    @Query("""UPDATE user_word_state 
-        SET nextChangeInIntervalPossibleOn = null, score = 0,
-        practiceInterval = (CASE WHEN practiceInterval < 5 THEN practiceInterval + 1 ELSE practiceInterval END)
-        WHERE nextChangeInIntervalPossibleOn < :currentDateInMilliseconds""")
-    fun readjustPracticeIntervalsMetToday(currentDateInMilliseconds: Long)
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertOne(stateDTO: UserWordStateDTO): Long
 
@@ -30,4 +25,24 @@ interface UserWordStateDao {
 
     @Update
     suspend fun updateMany(stateDTOs: List<UserWordStateDTO>)
+
+    @Query("""UPDATE user_word_state 
+        SET nextChangeInIntervalPossibleOn = null, score = 0,
+        practiceInterval = (CASE WHEN practiceInterval < 5 THEN practiceInterval + 1 ELSE practiceInterval END)
+        WHERE nextChangeInIntervalPossibleOn < :currentDateInMilliseconds""")
+    fun readjustPracticeIntervalsMetToday(currentDateInMilliseconds: Long)
+
+    @Query("""
+        UPDATE user_word_state
+        SET nextChangeInIntervalPossibleOn = :nextChangeInIntervalPossibleOn, lastChangeInInterval = :lastChangeInIntervalOn, wordAcquired = :wordAcquired
+        WHERE wordId IN (:ids) AND userId = :userId
+    """)
+    fun updateUserWordStateForRangeOfWords(
+            ids: List<String>,
+            nextChangeInIntervalPossibleOn: Date?,
+            lastChangeInIntervalOn: Date?,
+            wordAcquired: Boolean,
+            userId: String)
+
+
 }

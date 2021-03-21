@@ -91,6 +91,11 @@ data class VocabularyListDetailsDTO(
                 parentColumn = "_id",
                 entityColumn = "listId"
         )
+        val stateDTO: VocabularyListStateDTO?,
+        @Relation(
+                parentColumn = "_id",
+                entityColumn = "listId"
+        )
         val words: List<WordDTO>
 //        @Relation(
 //            parentColumn = "_id",

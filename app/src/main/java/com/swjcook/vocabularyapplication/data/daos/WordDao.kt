@@ -33,5 +33,5 @@ interface WordDao {
 
     @Transaction
     @Query("SELECT * FROM words WHERE listId = :listId")
-    fun findAllWithStateByListIdNoLiveData(listId: String): List<WordWithStateDTO>
+    suspend fun findAllWithStateByListIdNoLiveData(listId: String): List<WordWithStateDTO>
 }

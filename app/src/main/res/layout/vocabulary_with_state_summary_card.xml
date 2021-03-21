@@ -5,6 +5,7 @@
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="vocabularyListWithState"
             type="com.swjcook.vocabularyapplication.domain.VocabularyListWithState" />
@@ -48,13 +49,12 @@
                 android:id="@+id/levelText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_tiny"
                 android:layout_marginStart="@dimen/margin_default"
                 android:layout_marginEnd="@dimen/margin_default"
-                android:layout_marginBottom="@dimen/margin_default"
                 android:text="@{@string/vocabulary_overview_list_card_level(vocabularyListWithState.list.level)}"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
                 android:textColor="?android:attr/textColorSecondary"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/countryFlag"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/materialTextView"
@@ -68,10 +68,24 @@
                 android:layout_marginEnd="@dimen/margin_default"
                 android:layout_marginBottom="@dimen/margin_default"
                 bind:countryFlagVector="@{vocabularyListWithState.list}"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/levelText"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toTopOf="@id/materialTextView"
                 tools:srcCompat="@drawable/ic_germany" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginBottom="@dimen/margin_default"
+                android:layout_marginStart="@dimen/margin_default"
+                android:layout_marginEnd="@dimen/margin_default"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/levelText"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="@{vocabularyListWithState.state.practiceInterval != null ? vocabularyListWithState.state.practiceInterval.toString() : @string/fragment_vocabulary_lists_overview_not_started}"
+                tools:text="Level One"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>

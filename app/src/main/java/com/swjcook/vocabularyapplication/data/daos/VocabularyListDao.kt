@@ -15,6 +15,10 @@ interface VocabularyListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMany(vararg listDTOS: VocabularyListDTO)
 
+    @Update
+    suspend fun updateState(vocabularyListStateDTO: VocabularyListStateDTO)
+
+
     @Query("SELECT * FROM vocabulary_lists WHERE _id = :id")
     fun findById(id: String): LiveData<VocabularyListDTO>
 
@@ -41,10 +45,11 @@ interface VocabularyListDao {
     fun findByIdWithWordsNoLiveData(id: String): VocabularyListWithWordsDTO?
 
     @Transaction
+    @Query("SELECT * FROM vocabulary_lists WHERE _id = :id")
+    fun findByIdWithStateNoLiveData(id: String): VocabularyListWithStateDTO?
+
+    @Transaction
     @Query("SELECT * FROM vocabulary_lists")
     fun findAllWithWords(): LiveData<List<VocabularyListWithWordsDTO>>
-
-    @Update
-    suspend fun updateState(vocabularyListStateDTO: VocabularyListStateDTO)
 }
 

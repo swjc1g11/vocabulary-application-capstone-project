@@ -15,7 +15,6 @@ import java.lang.Exception
 import java.util.*
 
 class VocabularyListRepository(val database: LocalDatabase, val network: Network) {
-    // TODO incorporate user id into dao methods and into repository so user state is segmented by user
 
     fun getAllVocabularyListsWithState(): LiveData<List<VocabularyListWithState>> {
         val result = database.vocabularyListDao.findAllWithState()
@@ -151,40 +150,115 @@ class VocabularyListRepository(val database: LocalDatabase, val network: Network
         database.studyReminderDao.deleteByListId(listId)
     }
 
-    suspend fun readjustWordStateIntervalsExpiredToday() {
+    suspend fun reAdjustWordStateIntervalsExpiredToday() {
         val todayInMillis = Calendar.getInstance().timeInMillis
         withContext(Dispatchers.IO) {
             database.userWordStateDao.readjustPracticeIntervalsMetToday(todayInMillis)
+
+            // TODO also run a query to update vocabulary lists.....
         }
     }
 
+    /**
+     * Beast of a method that updates state if no state exists for a word, or else creates state.
+     *
+     * In updating, it also decided whether a word can be updated to wait for the next interval to progress a levle. It does this based on whether other words in the same list have a score of 100 or above, too.
+     *
+     * If the word being saved can be updated, the other words in the same list are also updated at the same time.
+     */
     suspend fun saveWordState(wordWithState: WordWithState) {
-        // TODO involve user id in request
-        // Word has existing state - update the state
+        withContext(Dispatchers.IO) {
+            val wordsWithState = database.wordDao.findAllWithStateByListIdNoLiveData(wordWithState.word.listId).asDomainWordsWithState()
+            var wordsReadyForNextInterval = true
+            var otherWordIds = mutableListOf<String>()
+            var otherWordsAcquired = true
+            wordsWithState?.let {
+                it.forEach {
+                    if (it.word._id != wordWithState.word._id) {
+                        var score = it.state?.score ?: 0
+                        otherWordIds.add(it.word._id)
+                        if (score < 100) {
+                            wordsReadyForNextInterval = false
+                        }
+
+                        if (it.state == null) otherWordsAcquired = false
+                        else if (!it.state!!.wordAcquired) otherWordsAcquired = false
+                    }
+                }
+            }
+
+            saveWordState(wordWithState, wordsReadyForNextInterval, otherWordIds)
+            // TODO list acquired is not saving correctly
+            val currentWordAcquired = wordWithState.state?.wordAcquired ?: false
+            saveVocabularyListState(
+                    listId = wordWithState.word.listId,
+                    nextChangeInIntervalPossibleOn = wordWithState.state?.nextChangeInIntervalPossibleOn,
+                    practiceInterval = wordWithState.state?.practiceInterval,
+                    lastChangeInInterval = wordWithState.state?.lastChangeInInterval,
+                    listAcquired = otherWordsAcquired && currentWordAcquired
+            )
+        }
+    }
+
+    private suspend fun saveWordState(wordWithState: WordWithState, wordsReadyForNextInterval: Boolean, otherWordIds: List<String>, userId: String = "") {
         if (wordWithState.state != null) {
             try {
                 wordWithState.state!!.questionsAnswered++
                 wordWithState.state!!.updatedAt = Date(System.currentTimeMillis())
-                // Increment the user score whilst it is less than 100
                 if (wordWithState.state!!.score < 100) {
                     wordWithState.state!!.score += 25;
                 }
-                wordWithState.state!!.checkAndActOnChangeInIntervalIfRequired()
+
+                if (wordsReadyForNextInterval) {
+                    wordWithState.state!!.checkAndActOnChangeInIntervalIfRequired()
+                    database.userWordStateDao.updateUserWordStateForRangeOfWords(
+                            ids = otherWordIds,
+                            nextChangeInIntervalPossibleOn = wordWithState.state!!.nextChangeInIntervalPossibleOn,
+                            lastChangeInIntervalOn = wordWithState.state!!.lastChangeInInterval,
+                            wordAcquired = wordWithState.state!!.wordAcquired,
+                            userId = userId
+                    )
+                }
+
                 database.userWordStateDao.updateOne(wordWithState!!.state!!.asDataTransferObject())
             } catch (error: Exception) {}
         } else {
             val wordState = UserWordState(
                     wordId = wordWithState.word._id,
                     listId = wordWithState.word.listId,
-                    userId = "",
+                    userId = userId,
                     questionsAnswered = 1,
                     score = 25
             )
             try {
                 database.userWordStateDao.insertOne(wordState.asDataTransferObject())
                 wordWithState.state = database.userWordStateDao.getStateById(wordState._id)?.asDomainUserWordState()
-                Log.i("VocabPracticeSa", wordWithState.toString())
             } catch (error: Exception) {}
+        }
+    }
+
+    private suspend fun saveVocabularyListState(listId: String, practiceInterval: UserWordStateLevel?,
+                                        nextChangeInIntervalPossibleOn: Date?, lastChangeInInterval: Date?, listAcquired: Boolean,
+                                        userId: String = "") {
+        val listWithState = database.vocabularyListDao.findByIdWithStateNoLiveData(listId)?.asDomainModel()
+        val state = listWithState?.state
+        if (state != null) {
+            state.nextChangeInIntervalPossibleOn = nextChangeInIntervalPossibleOn
+            state.lastChangeInInterval = lastChangeInInterval ?: Calendar.getInstance().time
+            practiceInterval?.let {
+                state.practiceInterval = practiceInterval
+            }
+            state.listAcquired = listAcquired
+            database.vocabularyListDao.updateState(state.asDataTransferObject())
+        } else{
+            val state = VocabularyListState(
+                    listId = listId,
+                    nextChangeInIntervalPossibleOn = nextChangeInIntervalPossibleOn,
+                    lastChangeInInterval = lastChangeInInterval ?: Date(Calendar.getInstance().timeInMillis),
+                    listAcquired = listAcquired,
+                    userId = userId
+            )
+            database.vocabularyListDao.insertState(state.asDataTransferObject())
         }
     }
 

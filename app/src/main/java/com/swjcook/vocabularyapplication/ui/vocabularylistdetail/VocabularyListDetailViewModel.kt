@@ -10,13 +10,10 @@ import android.util.Log
 import androidx.core.app.AlarmManagerCompat
 import androidx.lifecycle.*
 import com.swjcook.vocabularyapplication.MainActivity
-import com.swjcook.vocabularyapplication.data.entities.VocabularyListDetailsDTO
 import com.swjcook.vocabularyapplication.domain.*
 import com.swjcook.vocabularyapplication.receivers.VocabularyListStudyReminderReceiver
 import com.swjcook.vocabularyapplication.repositories.VocabularyListRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
 
 class VocabularyListDetailViewModel(val application: Application, val repository: VocabularyListRepository) : ViewModel() {
@@ -27,7 +24,6 @@ class VocabularyListDetailViewModel(val application: Application, val repository
         get() = _uuid
 
     private val _vocabularyListWithDetails = Transformations.switchMap(uuid) {
-        // TODO Use user id in request
         // repository.getVocabularyListDetailsById(it, "")
         repository.getVocabularyListDetailsMediated(it, "")
     }
@@ -145,7 +141,7 @@ class VocabularyListDetailViewModel(val application: Application, val repository
 
     fun updateExpiredWordState() {
         viewModelScope.launch {
-            repository.readjustWordStateIntervalsExpiredToday()
+            repository.reAdjustWordStateIntervalsExpiredToday()
         }
     }
 
