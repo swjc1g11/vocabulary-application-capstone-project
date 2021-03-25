@@ -12,6 +12,7 @@ import com.squareup.picasso.Picasso
 import com.swjcook.vocabularyapplication.R
 import com.swjcook.vocabularyapplication.data.entities.UserWordStateLevel
 import com.swjcook.vocabularyapplication.domain.VocabularyList
+import com.swjcook.vocabularyapplication.domain.VocabularyListState
 import com.swjcook.vocabularyapplication.domain.VocabularyListStudyReminder
 import com.swjcook.vocabularyapplication.domain.WordWithState
 import java.util.*
@@ -143,6 +144,45 @@ fun setLayoutMarginBottom(view: View, dimen: Float) {
     val layoutParams = view.layoutParams as ViewGroup.MarginLayoutParams
     layoutParams.bottomMargin = dimen.toInt()
     view.layoutParams = layoutParams
+}
+
+@BindingAdapter(value=["bind:vocabularyListState"])
+fun setVocabularyListState(textView: TextView, vocabularyListState: VocabularyListState?) {
+    val context = textView.context
+    if (vocabularyListState != null) {
+        if (vocabularyListState.listAcquired) {
+            textView.text = context.getText(R.string.fragment_vocabulary_list_well_done)
+        } else if (vocabularyListState.nextChangeInIntervalPossibleOn != null) {
+            val dateFormat = DateFormat.getDateFormat(context)
+            textView.text = String.format(
+                    context.getString(R.string.fragment_vocabulary_list_motivational_text_with_date),
+                    dateFormat.format(vocabularyListState.nextChangeInIntervalPossibleOn)
+            )
+        } else {
+            textView.text = context.getText(R.string.fragment_vocabulary_list_motivational_text)
+//            var text = ""
+//            when (vocabularyListState.practiceInterval) {
+//                UserWordStateLevel.LEVEL_ONE -> {
+//                    text = context.getString(R.string.strength_level_one)
+//                }
+//                UserWordStateLevel.LEVEL_TWO -> {
+//                    text = context.getString(R.string.strength_level_two)
+//                }
+//                UserWordStateLevel.LEVEL_THREE -> {
+//                    text = context.getString(R.string.strength_level_three)
+//                }
+//                UserWordStateLevel.LEVEL_FOUR -> {
+//                    text = context.getString(R.string.strength_level_four)
+//                }
+//                UserWordStateLevel.LEVEL_FIVE -> {
+//                    text = context.getString(R.string.strength_level_five)
+//                }
+//            }
+//            textView.text = text
+        }
+    } else {
+        textView.text = context.getString(R.string.fragment_vocabulary_lists_overview_not_started)
+    }
 }
 
 //fun getReviewInText(context: Context, timeDifferenceInMillis: Long): String {

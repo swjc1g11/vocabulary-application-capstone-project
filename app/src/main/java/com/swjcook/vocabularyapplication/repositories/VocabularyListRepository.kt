@@ -17,10 +17,31 @@ import java.util.*
 class VocabularyListRepository(val database: LocalDatabase, val network: Network) {
 
     fun getAllVocabularyListsWithState(): LiveData<List<VocabularyListWithState>> {
-        val result = database.vocabularyListDao.findAllWithState()
-        return Transformations.map(result) {
-            it.asDomainModels()
+        val a = database.vocabularyListDao.findAll()
+        val b = database.vocabularyListDao.findAllState("")
+
+        val result = MediatorLiveData<List<VocabularyListWithState>>()
+
+        result.addSource(a) {
+            val combined = combineVocabularyLisDTOsAndStateDTOsLiveData(a, b)
+            combined?.let {
+                result.value = it
+            }
         }
+
+        result.addSource(b) {
+            val combined = combineVocabularyLisDTOsAndStateDTOsLiveData(a, b)
+            combined?.let {
+                result.value = it
+            }
+        }
+
+        return result
+
+        //        val result = database.vocabularyListDao.findAllWithState()
+//        return Transformations.map(result) {
+//            it.asDomainModels()
+//        }
     }
 
     fun getVocabularyListDetailsMediated(listId: String, userId: String): LiveData<List<VocabularyListDetailItem>?> {
@@ -29,11 +50,11 @@ class VocabularyListRepository(val database: LocalDatabase, val network: Network
 
         val result = MediatorLiveData<List<VocabularyListDetailItem>?>()
 
-        result.addSource(initialDataSet) { value ->
+        result.addSource(initialDataSet) { _ ->
             result.value = combineVocabularyListDetailItemAndUserStateDTOLiveData(initialDataSet, userStates)
         }
 
-        result.addSource(userStates) { value ->
+        result.addSource(userStates) { _ ->
             result.value = combineVocabularyListDetailItemAndUserStateDTOLiveData(initialDataSet, userStates)
         }
 
@@ -46,13 +67,42 @@ class VocabularyListRepository(val database: LocalDatabase, val network: Network
 
         val result = MediatorLiveData<List<WordWithState>?>()
 
-        result.addSource(liveData1) { value ->
+        result.addSource(liveData1) { _ ->
             result.value = combineWordDTOAndUserStateDTOLiveData(liveData1, liveData2)
         }
-        result.addSource(liveData2) { value ->
+        result.addSource(liveData2) { _ ->
             result.value = combineWordDTOAndUserStateDTOLiveData(liveData1, liveData2)
         }
         return result
+    }
+
+    private fun combineVocabularyLisDTOsAndStateDTOsLiveData(
+            lists: LiveData<List<VocabularyListDTO>>, userStates: LiveData<List<VocabularyListStateDTO>>) : List<VocabularyListWithState>? {
+        val listsValue = lists.value
+        val userStatesValue = userStates.value
+
+        if (listsValue == null || userStatesValue == null) {
+            return null
+        }
+
+        val listMap = hashMapOf<String, VocabularyListWithState>()
+        val initialList = mutableListOf<VocabularyListWithState>()
+        listsValue.forEach {
+            val listWithState = VocabularyListWithState(list = it.asDomainVocabularyList(), state = null)
+            initialList.add(listWithState)
+            listMap.put(it._id, listWithState)
+        }
+
+        userStatesValue.forEach { state ->
+            if (listMap.containsKey(state.listId)) {
+                val result = listMap.get(state.listId)
+                result?.let {
+                    it.state = state.asDomainModel()
+                }
+            }
+        }
+
+        return initialList
     }
 
     private fun combineVocabularyListDetailItemAndUserStateDTOLiveData(
@@ -118,17 +168,18 @@ class VocabularyListRepository(val database: LocalDatabase, val network: Network
         return Transformations.map(result) { listWithDetails ->
             val tempList = mutableListOf<VocabularyListDetailItem>()
             if (listWithDetails != null) {
-                listWithDetails.listDTO?.let {
-                    val list = listWithDetails.listDTO.asDomainVocabularyList()
-                    var lowestDate : Date? = null
-                    val headerItem = VocabularyListDetailItem.VocabularyListItem(list, listWithDetails.reminderDTO?.asDomainModel(), lowestDate)
-                    tempList.add(headerItem)
-                    listWithDetails.words.forEach { word ->
-                        val wordWithState = WordWithState(word = word.asDomainWord(), state = null)
-                        tempList.add(
-                                VocabularyListDetailItem.WordWithStateItem(wordWithState)
-                        )
-                    }
+//                listWithDetails.listDTO?.let {
+//
+//                }
+                val list = listWithDetails.listDTO.asDomainVocabularyList()
+                var lowestDate : Date? = null
+                val headerItem = VocabularyListDetailItem.VocabularyListItem(list, listWithDetails.reminderDTO?.asDomainModel(), lowestDate)
+                tempList.add(headerItem)
+                listWithDetails.words.forEach { word ->
+                    val wordWithState = WordWithState(word = word.asDomainWord(), state = null)
+                    tempList.add(
+                            VocabularyListDetailItem.WordWithStateItem(wordWithState)
+                    )
                 }
             }
             tempList
@@ -159,6 +210,13 @@ class VocabularyListRepository(val database: LocalDatabase, val network: Network
         }
     }
 
+    suspend fun reAdjustVocabularyListStateIntervalsExpiredToday() {
+        val todayInMillis = Calendar.getInstance().timeInMillis
+        withContext(Dispatchers.IO) {
+            database.vocabularyListDao.readjustPracticeIntervalsMetTodayVocabList(todayInMillis)
+        }
+    }
+
     /**
      * Beast of a method that updates state if no state exists for a word, or else creates state.
      *
@@ -172,18 +230,16 @@ class VocabularyListRepository(val database: LocalDatabase, val network: Network
             var wordsReadyForNextInterval = true
             var otherWordIds = mutableListOf<String>()
             var otherWordsAcquired = true
-            wordsWithState?.let {
-                it.forEach {
-                    if (it.word._id != wordWithState.word._id) {
-                        var score = it.state?.score ?: 0
-                        otherWordIds.add(it.word._id)
-                        if (score < 100) {
-                            wordsReadyForNextInterval = false
-                        }
-
-                        if (it.state == null) otherWordsAcquired = false
-                        else if (!it.state!!.wordAcquired) otherWordsAcquired = false
+            wordsWithState.forEach {
+                if (it.word._id != wordWithState.word._id) {
+                    var score = it.state?.score ?: 0
+                    otherWordIds.add(it.word._id)
+                    if (score < 100) {
+                        wordsReadyForNextInterval = false
                     }
+
+                    if (it.state == null) otherWordsAcquired = false
+                    else if (!it.state!!.wordAcquired) otherWordsAcquired = false
                 }
             }
 
@@ -220,7 +276,7 @@ class VocabularyListRepository(val database: LocalDatabase, val network: Network
                     )
                 }
 
-                database.userWordStateDao.updateOne(wordWithState!!.state!!.asDataTransferObject())
+                database.userWordStateDao.updateOne(wordWithState.state!!.asDataTransferObject())
             } catch (error: Exception) {}
         } else {
             val wordState = UserWordState(
@@ -251,14 +307,14 @@ class VocabularyListRepository(val database: LocalDatabase, val network: Network
             state.listAcquired = listAcquired
             database.vocabularyListDao.updateState(state.asDataTransferObject())
         } else{
-            val state = VocabularyListState(
+            val newState = VocabularyListState(
                     listId = listId,
                     nextChangeInIntervalPossibleOn = nextChangeInIntervalPossibleOn,
                     lastChangeInInterval = lastChangeInInterval ?: Date(Calendar.getInstance().timeInMillis),
                     listAcquired = listAcquired,
                     userId = userId
             )
-            database.vocabularyListDao.insertState(state.asDataTransferObject())
+            database.vocabularyListDao.insertState(newState.asDataTransferObject())
         }
     }
 

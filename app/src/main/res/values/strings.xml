@@ -39,7 +39,7 @@
     <string name="fragment_vocabulary_list_details_reminder_deleted">Reminder deleted</string>
     <string name="fragment_vocabulary_list_add_reminder">Set</string>
     <string name="fragment_vocabulary_list_add_reminder_with_date">Set Study Reminder (%1$s)</string>
-    <string name="fragment_vocabulary_list_motivational_text">Keep practicing</string>
+    <string name="fragment_vocabulary_list_motivational_text">Practice makes progress!</string>
     <string name="fragment_vocabulary_list_well_done">Well done! You\'ve completed this list.</string>
     <string name="fragment_vocabulary_list_motivational_text_with_date">Review on %1$s</string>
 

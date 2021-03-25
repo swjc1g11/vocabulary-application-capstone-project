@@ -28,6 +28,12 @@ class VocabularyListsOverviewViewModel(private val repository: VocabularyListRep
         _showFilterBottomSheet.value = value
     }
 
+    fun updateVocabularyListState() {
+        viewModelScope.launch {
+            repository.reAdjustVocabularyListStateIntervalsExpiredToday()
+        }
+    }
+
     fun updateVocabularyLists() {
         _showLoading.value = true
         viewModelScope.launch {

@@ -25,7 +25,7 @@ data class VocabularyListWithWords(
 
 data class VocabularyListWithState(
         val list: VocabularyList,
-        val state: VocabularyListState?
+        var state: VocabularyListState?
 )
 
 fun VocabularyList.asDataTransferObject() : VocabularyListDTO {

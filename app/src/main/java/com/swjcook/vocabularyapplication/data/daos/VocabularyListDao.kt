@@ -32,6 +32,9 @@ interface VocabularyListDao {
     @Query("SELECT * FROM vocabulary_lists")
     fun findAll(): LiveData<List<VocabularyListDTO>>
 
+    @Query("SELECT * FROM vocabulary_list_state WHERE userId = :userId")
+    fun findAllState(userId: String): LiveData<List<VocabularyListStateDTO>>
+
     @Transaction
     @Query("SELECT * FROM vocabulary_lists")
     fun findAllWithState(): LiveData<List<VocabularyListWithStateDTO>>
@@ -51,5 +54,11 @@ interface VocabularyListDao {
     @Transaction
     @Query("SELECT * FROM vocabulary_lists")
     fun findAllWithWords(): LiveData<List<VocabularyListWithWordsDTO>>
+
+    @Query("""UPDATE vocabulary_list_state
+        SET nextChangeInIntervalPossibleOn = null, practiceInterval = (CASE WHEN practiceInterval < 5 THEN practiceInterval + 1 ELSE practiceInterval END)
+        WHERE nextChangeInIntervalPossibleOn < :currentDateInMilliseconds
+    """)
+    fun readjustPracticeIntervalsMetTodayVocabList(currentDateInMilliseconds: Long)
 }
 

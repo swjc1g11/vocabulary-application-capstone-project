@@ -44,6 +44,8 @@ class VocabularyListsOverviewFragment : Fragment(), VocabularyListOverviewAdapte
         val adapter = VocabularyListOverviewAdapter(this)
         binding.listOfVocabularyLists.adapter = adapter
 
+        _viewModel.updateVocabularyListState()
+
         _viewModel.vocabularyLists.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 if (it.isEmpty()) {

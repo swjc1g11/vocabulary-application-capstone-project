@@ -26,7 +26,7 @@ fun VocabularyListStateDTO.asDomainModel(): VocabularyListState {
         practiceInterval = practiceInterval,
         lastChangeInInterval = lastChangeInInterval,
         nextChangeInIntervalPossibleOn = nextChangeInIntervalPossibleOn,
-        listAcquired = false,
+        listAcquired = listAcquired,
         createdAt = createdAt,
         updatedAt = updatedAt
     )

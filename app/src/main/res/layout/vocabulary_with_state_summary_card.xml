@@ -84,7 +84,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/levelText"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:text="@{vocabularyListWithState.state.practiceInterval != null ? vocabularyListWithState.state.practiceInterval.toString() : @string/fragment_vocabulary_lists_overview_not_started}"
+                bind:vocabularyListState="@{vocabularyListWithState.state}"
                 tools:text="Level One"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
