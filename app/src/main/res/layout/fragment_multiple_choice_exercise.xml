@@ -41,11 +41,67 @@
                     tools:text="What is the correct translation of 'ein Ordner'?" />
 
 
+                <LinearLayout
+                    android:id="@+id/feedbackArea"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/instructions"
+                    android:orientation="vertical">
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/correctFeedback"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_default"
+                        android:layout_marginStart="@dimen/margin_default"
+                        android:layout_marginEnd="@dimen/margin_default"
+                        android:elevation="0dp"
+                        app:cardCornerRadius="@dimen/card_corner_radius"
+                        app:cardBackgroundColor="@android:color/holo_green_light"
+                        android:visibility="@{viewModel.feedbackStatus.equals(VocabularyPracticeViewModel.ShowFeedbackStatus.SHOW_CORRECT_FEEDBACK) ? View.VISIBLE : View.GONE)}"
+                        tools:visibility="gone">
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                            android:textStyle="bold"
+                            android:textColor="@color/white"
+                            android:layout_margin="@dimen/margin_default"
+                            android:text="@string/feedback_correct"/>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/incorrectFeedback"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_default"
+                        android:layout_marginStart="@dimen/margin_default"
+                        android:layout_marginEnd="@dimen/margin_default"
+                        android:elevation="0dp"
+                        app:cardCornerRadius="@dimen/card_corner_radius"
+                        app:cardBackgroundColor="@android:color/holo_red_light"
+                        android:visibility="@{viewModel.feedbackStatus.equals(VocabularyPracticeViewModel.ShowFeedbackStatus.SHOW_INCORRECT_FEEDBACK) ? View.VISIBLE : View.GONE)}"
+                        tools:visibility="visible">
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_default"
+                            android:textStyle="bold"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                            android:textColor="@color/white"
+                            tools:text="The correct answer was:\n\na folder"
+                            android:text="@{@string/feedback_correct_answer_was(multipleChoiceExercise.correctAnswer.word.translation)}"/>
+
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
                 <RadioGroup
                     android:id="@+id/radioGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/instructions"
+                    app:layout_constraintTop_toBottomOf="@id/feedbackArea"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginTop="@dimen/margin_default"
@@ -71,6 +127,7 @@
                         android:onClick="@{() -> multipleChoiceExercise.setSelectedAnswer(multipleChoiceExercise.answerTwo)}"/>
                 </RadioGroup>
 
+                <!-- These buttons could be moved outside of exercise component to increase re-usability -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/checkButton"
                     android:layout_width="match_parent"
@@ -80,6 +137,7 @@
                     android:layout_marginEnd="@dimen/margin_default"
                     android:layout_marginBottom="@dimen/margin_default"
                     app:layout_constraintTop_toBottomOf="@id/radioGroup"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     android:text="@string/exercise_check"
                     tools:text="Check"
                     android:visibility="@{viewModel.feedbackStatus.equals(VocabularyPracticeViewModel.ShowFeedbackStatus.NO_FEEDBACK) ? View.VISIBLE : View.GONE}"
@@ -92,6 +150,7 @@
                     app:layout_constraintTop_toBottomOf="@id/radioGroup"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     android:layout_marginTop="@dimen/margin_default"
                     android:layout_marginStart="@dimen/margin_default"
                     android:layout_marginEnd="@dimen/margin_default"
@@ -102,60 +161,6 @@
                     android:onClick="@{() -> viewModel.nextExercise(multipleChoiceExercise)}"/>
 
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/correctFeedback"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_default"
-                    android:layout_marginTop="@dimen/margin_default"
-                    android:layout_marginStart="@dimen/margin_default"
-                    android:layout_marginEnd="@dimen/margin_default"
-                    app:layout_constraintTop_toBottomOf="@+id/nextButton"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:elevation="0dp"
-                    app:cardCornerRadius="@dimen/card_corner_radius"
-                    app:cardBackgroundColor="@android:color/holo_green_light"
-                    android:visibility="@{viewModel.feedbackStatus.equals(VocabularyPracticeViewModel.ShowFeedbackStatus.SHOW_CORRECT_FEEDBACK) ? View.VISIBLE : View.GONE)}">
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                        android:textStyle="bold"
-                        android:textColor="@color/white"
-                        android:layout_margin="@dimen/margin_default"
-                        android:text="@string/feedback_correct"/>
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/incorrectFeedback"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_default"
-                    android:layout_marginStart="@dimen/margin_default"
-                    android:layout_marginEnd="@dimen/margin_default"
-                    android:layout_marginBottom="@dimen/margin_default"
-                    app:layout_constraintTop_toBottomOf="@id/nextButton"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:elevation="0dp"
-                    app:cardCornerRadius="@dimen/card_corner_radius"
-                    app:cardBackgroundColor="@android:color/holo_red_light"
-                    android:visibility="@{viewModel.feedbackStatus.equals(VocabularyPracticeViewModel.ShowFeedbackStatus.SHOW_INCORRECT_FEEDBACK) ? View.VISIBLE : View.GONE)}">
-                    <com.google.android.material.textview.MaterialTextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/margin_default"
-                            android:textStyle="bold"
-                            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                            android:textColor="@color/white"
-                            tools:text="The correct answer was:\n\na folder"
-                            android:text="@{@string/feedback_correct_answer_was(multipleChoiceExercise.correctAnswer.word.translation)}"/>
-
-                </com.google.android.material.card.MaterialCardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>

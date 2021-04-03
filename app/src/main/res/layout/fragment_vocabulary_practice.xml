@@ -4,13 +4,17 @@
     <data>
         <import type="android.view.View"/>
         <import type="com.swjcook.vocabularyapplication.ui.vocabularypractice.exercises.MultipleChoiceExercise"/>
+        <import type="com.swjcook.vocabularyapplication.ui.vocabularypractice.VocabularyPracticeViewModel"/>
         <variable
             name="viewModel"
             type="com.swjcook.vocabularyapplication.ui.vocabularypractice.VocabularyPracticeViewModel" />
     </data>
-
-        <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/background_grey">
@@ -46,4 +50,6 @@
             </FrameLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

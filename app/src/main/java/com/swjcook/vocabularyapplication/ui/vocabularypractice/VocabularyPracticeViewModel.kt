@@ -40,6 +40,9 @@ class VocabularyPracticeViewModel(val repository: VocabularyListRepository) : Vi
     private var _currentExercise = MutableLiveData<Exercise?>(null)
     val currentExercise : LiveData<Exercise?>
         get() = _currentExercise
+    private  var _correctAnswer = MutableLiveData<String?>(null)
+    val correctAnswer : LiveData<String?>
+        get() = _correctAnswer
 
     private val _feedbackStatus = MutableLiveData<ShowFeedbackStatus>(ShowFeedbackStatus.NO_FEEDBACK)
     val feedbackStatus: LiveData<ShowFeedbackStatus>
@@ -53,6 +56,11 @@ class VocabularyPracticeViewModel(val repository: VocabularyListRepository) : Vi
             }
             _feedbackStatus.value = ShowFeedbackStatus.SHOW_CORRECT_FEEDBACK
         } else {
+            var currentExerciseCorrectAnswer = when (exercise) {
+                is MultipleChoiceExercise -> exercise.correctAnswer.word.translation
+                else -> null
+            }
+            _correctAnswer.value = currentExerciseCorrectAnswer
             _feedbackStatus.value = ShowFeedbackStatus.SHOW_INCORRECT_FEEDBACK
         }
     }
